@@ -1,10 +1,11 @@
 const db = require('../database/dbConfig.js');
 
 module.exports = {
-  add,
+  addTab,
   getTabs,
   findTabsBy,
-  findById,
+  findByUserId,
+  // delete,
 };
 
 function getTabs() {
@@ -15,17 +16,24 @@ function findTabsBy(filter) {
   return db('tabs').where(filter);
 }
 
-async function add(tab) {
+async function addTab(tab) {
   const [id] = await db('tabs').insert(tab);
 
-  return findById(id);
+  return findByUserId(id);
 }
 
-function findById(id) {
+function findByUserId(user_id) {
   return db('tabs')
-    .where({id: id})
+    .where({id: user_id})
     .first();
 }
+
+// function delete = user_id => {
+//   return db('users')
+//       .where({ id: user_id })
+//       .first()
+//       .del();
+// }
 
 // getTabByUser
 
