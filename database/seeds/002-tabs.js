@@ -9,13 +9,14 @@ exports.seed = function(knex, Promise) {
             title: "Lambda",
             website: "https://lambdaschool.com/",
             date: "March 11, 2019",
-            user_id: 3,
+            user_id: 1,
             favicon: "https://pbs.twimg.com/profile_images/973277209644249089/0Te2jtBH_400x400.jpg",
             short_description: "Lambda School is a 9 month, immersive program that gives you the tools and training you need to launch your new career—from the comfort of your own home.",
             full_description: "Lambda School trains people online to be software engineers at no up-front cost. Instead of paying tuition, students can agree to pay a percentage of their income after they're employed, and only if they're making more than $50k per year. If you do not find a job, or don't reach that level of income, you will never pay a cent.",
           },
           {
             title: "Twitter",
+            user_id: 2,
             website: "https://twitter.com/",
             date: "March 11, 2019",
             favicon: "https://cdn3.iconfinder.com/data/icons/inficons/512/twitter.png",
@@ -24,6 +25,7 @@ exports.seed = function(knex, Promise) {
           },
           {
             title: "Google",
+            user_id: 3,
             website: "https://www.google.com/",
             date: "March 11, 2019",
             favicon: "https://image.flaticon.com/teams/slug/google.jpg",
@@ -32,6 +34,7 @@ exports.seed = function(knex, Promise) {
           },
           {
             title: "TED",
+            user_id: 4,
             website: "https://www.ted.com/#/",
             date: "March 11, 2019",
             favicon: "https://cdn1.iconfinder.com/data/icons/iconza-circle-social/64/697025-ted-512.png",
@@ -40,6 +43,7 @@ exports.seed = function(knex, Promise) {
           },
           {
             title: "Pinterest",
+            user_id: 2,
             website: "https://www.pinterest.com/",
             date: "March 11, 2019",
             favicon: "https://www.nwea.org/blog/content/uploads/2018/08/Pinterest-Icon-Square.jpg",
@@ -48,6 +52,7 @@ exports.seed = function(knex, Promise) {
           },
           {
             title: "GitHub",
+            user_id: 1,
             website: "https://github.com/",
             date: "March 11, 2019",
             favicon: "https://image.flaticon.com/icons/png/512/25/25231.png",
@@ -56,6 +61,7 @@ exports.seed = function(knex, Promise) {
           },
           {
             title: "Twitch",
+            user_id: 3,
             website: "https://www.twitch.tv/",
             date: "March 11, 2019",
             favicon:"https://assets.help.twitch.tv/Glitch_Purple_RGB.png",
@@ -64,6 +70,7 @@ exports.seed = function(knex, Promise) {
           },
           {
             title: "Postmates",
+            user_id: 4,
             website: "https://postmates.com/",
             date: "March 11, 2019",
             favicon:"https://postmates.com/assets/badges/pm-black-circle.png",
@@ -72,6 +79,7 @@ exports.seed = function(knex, Promise) {
           },
           {
             title: "Amazon",
+            user_id: 1,
             website: "https://www.amazon.com/",
             date: "March 11, 2019",
             favicon:"http://aux.iconspalace.com/uploads/amazon-icon-256.png",

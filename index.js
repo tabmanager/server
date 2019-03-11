@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 
 const db = require('./database/dbConfig.js');
 const Users = require('./users/users-model.js');
+const Tabs = require('./tabs/tabs-model.js');
 
 
 const secret =
@@ -145,7 +146,8 @@ server.get('/users', restricted, async (req, res) => {
 
  // GET list of tabs
  server.get('/api/tabs', (req, res) => {
-    db('tabs')
+    // db('tabs')
+    Tabs.getTabs()
     .then(tabs => {
       const tabCollection = tabs.map(tab => {
         return { id: tab.id, title: tab.title, website: tab.website, favicon: tab.favicon };
@@ -158,8 +160,34 @@ server.get('/users', restricted, async (req, res) => {
   });
 
   // GET tab by id
- server.get('/api/tabs/:tab_id', (req, res) => {
+
+//   server.get('/api/tabs/:user_id', async (req, res) => {
+//     try {
+//         const response = await Tabs.findByUserId(req.params.id);
+
+//         if (response.length > 0) {
+//             if (req.decodedToken.user_id.toString() === response[0].user_id.toString()) {
+//                 res.status(200).json({ id: response[0].id, text: response[0].text });
+//             } else {
+//                 res.status(403).json({
+//                     error: `You are not allowed to see these tabs!`
+//                 });
+//             }
+//         } else {
+//             res.status(404).json({
+//                 error: `Couldn't find a user with that Id!`
+//             });
+//         }
+//     } catch (err) {
+//         res.status(500).json({
+//             error: `Could not get tabs at this time.`
+//         });
+//     }
+// });
+
+ server.get('/api/tabs/:user_id', (req, res) => {
     db('tabs')
+    // Tabs.findByUserId()
     .then(tabs => {
       const tabCollection = tabs.map(tab => {
         return { id: tab.id, title: tab.title, website: tab.website, favicon: tab.favicon };
@@ -172,6 +200,7 @@ server.get('/users', restricted, async (req, res) => {
   });
 
   // POST a new tab
+
   server.post('/api/add_tab', (req, res) => {
     const { title, website } = req.body;
     let { date, favicon, short_description, full_description } = req.body;
@@ -179,8 +208,9 @@ server.get('/users', restricted, async (req, res) => {
     if(!favicon) favicon = 'na';
     if(!short_description) short_description = 'na';
     if(!full_description) full_description = 'na';
-  
-    db('tabs')
+
+    Tabs.addTab()
+    // db('tabs')
     .insert({title, website, favicon, date, short_description, full_description})
     .then(id => {
       res.status(201).json({id: id[0], title, website, favicon, date, short_description, full_description});
@@ -188,7 +218,7 @@ server.get('/users', restricted, async (req, res) => {
     .catch(err => res.status(500).json({errorMessage: err}))
   });  
 
-  // Edit tab
+  // EDIT tab
   server.put('/edit_tab/:tab_id', (req, res) => {
     const { tab_id } = req.params
     const { title, website } = req.body;
@@ -207,7 +237,8 @@ server.get('/users', restricted, async (req, res) => {
   server.delete('/delete_tab/:tab_id', (req, res) => {
     const { tab_id } = req.params;
   
-    db('tabs')
+    // db('tabs')
+    Tabs.delete()
     .where({id: tab_id})
     .del()
     .then(count => {
