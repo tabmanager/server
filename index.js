@@ -20,20 +20,6 @@ server.use(helmet());
 server.use(express.json());
 server.use(cors());
 
-
-// module.exports = server => {
-//     server.use('/api/user-access', userAccessRouter);
-//     server.use('/api/tab-collection', tabListRouter);
-//     server.use('/api/tab-edit', editRouter)
-//     server.get('/', root);
-//   };
-  
-//   function root(req, res) {
-  
-//     res.send('It is alive!');
-  
-// }
-
 server.get('/', (req, res) => {
   res.send("It's alive!");
 });
@@ -160,92 +146,107 @@ server.get('/users', restricted, async (req, res) => {
   });
 
   // GET tab by id
-
-//   server.get('/api/tabs/:user_id', async (req, res) => {
-//     try {
-//         const response = await Tabs.findByUserId(req.params.id);
-
-//         if (response.length > 0) {
-//             if (req.decodedToken.user_id.toString() === response[0].user_id.toString()) {
-//                 res.status(200).json({ id: response[0].id, text: response[0].text });
-//             } else {
-//                 res.status(403).json({
-//                     error: `You are not allowed to see these tabs!`
-//                 });
-//             }
-//         } else {
-//             res.status(404).json({
-//                 error: `Couldn't find a user with that Id!`
-//             });
-//         }
-//     } catch (err) {
-//         res.status(500).json({
-//             error: `Could not get tabs at this time.`
-//         });
-//     }
-// });
-
- server.get('/api/tabs/:user_id', (req, res) => {
-    db('tabs')
-    // Tabs.findByUserId()
-    .then(tabs => {
-      const tabCollection = tabs.map(tab => {
-        return { id: tab.id, title: tab.title, website: tab.website, favicon: tab.favicon };
+  server.get('/:user_id', async (req, res) => {
+    try {
+      const tab = await Tabs.findByUserId(req.params.user_id);
+  
+      if (tab) {
+        res.status(200).json(tab);
+      } else {
+        res.status(404).json({ message: 'Tabs not found' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: 'Error retrieving the tabs',
       });
-      res.status(200).json(tabs);
-    })
-    .catch(err => res.status(500).json({
-      errorMessage: err
-    }))
+    }
   });
+
+
+//  server.get('/api/tabs/:user_id', (req, res) => {
+//     db('tabs')
+//     // Tabs.findByUserId()
+//     .then(tabs => {
+//       const tabCollection = tabs.map(tab => {
+//         return { id: tab.id, title: tab.title, website: tab.website, favicon: tab.favicon };
+//       });
+//       res.status(200).json(tabs);
+//     })
+//     .catch(err => res.status(500).json({
+//       errorMessage: err
+//     }))
+//   });
+
+
 
   // POST a new tab
 
-  server.post('/api/add_tab', (req, res) => {
-    const { title, website } = req.body;
-    let { date, favicon, short_description, full_description } = req.body;
-    if(!date) date = 'na';
-    if(!favicon) favicon = 'na';
-    if(!short_description) short_description = 'na';
-    if(!full_description) full_description = 'na';
-
-    Tabs.addTab()
-    // db('tabs')
-    .insert({title, website, favicon, date, short_description, full_description})
-    .then(id => {
-      res.status(201).json({id: id[0], title, website, favicon, date, short_description, full_description});
-    })
-    .catch(err => res.status(500).json({errorMessage: err}))
-  });  
-
-  // EDIT tab
-  server.put('/edit_tab/:tab_id', (req, res) => {
-    const { tab_id } = req.params
-    const { title, website } = req.body;
-    let { date, favicon, short_description, full_description } = req.body;
-  
-    db('tabs')
-    .where({id: tab_id})
-    .update({title, website, favicon, date, short_description, full_description})
-    .then(id => {
-      res.status(201).json({id: id[0], title, website, favicon, date, short_description, full_description});
-    })
-    .catch(err => res.status(500).json({errorMessage: err}))
+  server.post('/tabs', async (req, res) => {
+    try {
+      const tab = await Tabs.add(req.body);
+      res.status(201).json(tab);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: 'Error adding the hub',
+      });
+    }
   });
 
+  // server.post('/api/add_tab', (req, res) => {
+  //   const { title, website } = req.body;
+  //   let { date, favicon, short_description, full_description } = req.body;
+  //   if(!date) date = 'na';
+  //   if(!favicon) favicon = 'na';
+  //   if(!short_description) short_description = 'na';
+  //   if(!full_description) full_description = 'na';
+
+  //   Tabs.addTab()
+  //   // db('tabs')
+  //   .insert({title, website, favicon, date, short_description, full_description})
+  //   .then(id => {
+  //     res.status(201).json({id: id[0], title, website, favicon, date, short_description, full_description});
+  //   })
+  //   .catch(err => res.status(500).json({errorMessage: err}))
+  // });  
+
+
+  // EDIT tab
+  server.put('/:id', async (req, res) => {
+    try {
+      const tab = await Tabs.update(req.params.id, req.body);
+      if (tab) {
+        res.status(200).json(tab);
+      } else {
+        res.status(404).json({ message: 'The Tab could not be found' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: 'Error updating the tab',
+      });
+    }
+  });
+
+
   // DELETE tab
-  server.delete('/delete_tab/:tab_id', (req, res) => {
-    const { tab_id } = req.params;
-  
-    // db('tabs')
-    Tabs.delete()
-    .where({id: tab_id})
-    .del()
-    .then(count => {
-      res.status(204).end()
-    })
-    .catch(err => res.status(500).json({errorMessage: err}))
-  });  
+  server.delete('/:id', async (req, res) => {
+    try {
+      const count = await Tabs.remove(req.params.id);
+      if (count > 0) {
+        res.status(200).json({ message: 'The tab has been nuked' });
+      } else {
+        res.status(404).json({ message: 'The tab could not be found' });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: 'Error removing the tab',
+      });
+    }
+  });
+ 
 
 const port = process.env.PORT || 4000;
 server.listen(port, () => console.log(`\n** Running on port ${port} **\n`));
