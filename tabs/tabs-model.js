@@ -45,7 +45,6 @@ async function addTab(tab) {
 function findByUserId(user_id) {
   return db('tabs')
     .where({ user_id })
-    .first();
 }
 
 
