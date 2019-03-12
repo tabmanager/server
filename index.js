@@ -66,7 +66,8 @@ server.post('/api/login', (req, res) => {
           message: `Welcome ${user.username}!`,
           token,
           secret,
-          roles: token.roles
+          roles: token.roles,
+          user_id: user.id 
         })
       } else {
         res.status(401).json({ message: 'Invalid Credentials' })
