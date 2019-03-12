@@ -1,51 +1,207 @@
-# Tabless Thrusday
+# Tabless Thursday
 
-# What is this API?
-- api for Tabless Thursday app, an app that allows you to organize your browser tabs
-- api contains collection of tab lists and users
-- users can add, remove, and update tabs
+Tabless Thursday is an app that allows you to organize your browser tabs!
 
-# How to download and use Tabless Thursday
-- fork and clone repo
-- `yarn install` and `yarn start`
-- server up and running
-- listening on port 4000
-- user resources `/api/user-access/`
-- tabs resources `/api/tab-collection/`
-- tab resource `/api/tab/`
-- url for endpoints baseurl + resource + action
-- example  base `http://localhost:4000` or `https://.herokuapp.com`
-- example full endpoint url `https://herokuapp.com/`
+## Getting Started
 
-# get method endpoints
-get method `https://herokuapp.com`
-  - retrive list of tabss from database
+The API can be found at the following url:
+```
+https://tab-manager.herokuapp.com/
+```
 
-get method `https://.herokuapp.com`
-  - retrive information for selected tab id
+### Prerequisites (for local use)
 
-get method `https://.herokuapp.com`
-  - retive list of users from database
+- run `yarn` in order to install all dependencies
+- use the command `yarn server` to run a live server!
 
-# user endpoints for login and registration
+## Endpoints
 
-post method `https://.herokuapp.com`
-  - login through this endpoint
-  - schema {`username`, `password`}
+| Method |     Endpoint         |              Requires                    |                                        Description                            |
+|--------|----------------------|------------------------------------------|-------------------------------------------------------------------------------|
+|  POST  | `/api/register/`     |         `username`, `password`, `email`      | Used for adding a new user to database.                                   |
+|  POST  | `/api/login/`        |            `username`, `password`            | Used to log a user in. Returns a token and the user's name in its body.   |
+|  GET   | `/api/users`         |              Successful Login                | Used to show all users in the database.                                   |
+|  GET   | `/api/users/:id/`    |              Successful Login                | Used to show a specific user in the database.                             |
+|  GET   | `/api/tabs`          |              Successful Login                | Used to show tabs in the database.                                        |
+|  GET   | `/api/tabs/:user_id/`|              Successful Login                | Used to show a specific user's saved tabs in the database.                |
+|  POST  | `/api/tabs/`         |              Successful Login, Data          | Used to post a new tab to the user's saved tabs in the database.          |
+|  PUT   | `api/tabs/:id`       |            Successful Login, Data            | Used to edit the logged in user's tabs. **Only works on current user!**   |
+| DELETE | `api/tabs/:id/`      |              Successful Login                | Used to delete the logged in user's tab. **Only works on current user!**  |
 
-post method `https://.herokuapp.com` 
-  - register a new user through this endpoint
-  - schema {`username`, `password`}
+---
 
-delete method `https://herokuapp.com/`
-  - delete a tab
+### User Registration
 
-put method `https://.herokuapp.com/`
-  - edit a tab
-  - schema required { `title`, `website` }
-  - schema optional { `date`, `favicon`, `short_description`, `full_description` }
 
-# routes
-  - `/api/user-access/`
-  - `/api/rab-collection/`
-  - `/api/tab/`
+Method used: **[POST]** `/api/register/`
+
+On Success: Returns the Id of the new user.
+
+
+
+Parameters:
+
+|   Name    | Type | Required |                      Notes                       |
+|-----------|------|----------|--------------------------------------------------|
+| username  |string|    yes   |Must be unique.                                   |
+| password  |string|    yes   |Can be up to 128 characters in length.            |
+|   email   |string|    no    |The email the user wishes to use.                 |
+
+Example of what to use: 
+```
+{
+    username: "Lambda",
+    password: "testpassword",
+    email: "lambda@lambda.com"
+}
+```
+---
+
+### User Login
+
+
+Method used: **[POST]** `/api/login/`
+
+On Success: 
+Returns a token to be used to authenticate the user.
+
+
+Parameters:
+
+|  Name  | Type | Required |
+|--------|------|----------|
+|username|string|    yes   |
+|password|string|    yes   |
+
+Example of what to use: 
+```
+{
+    username: "Lambda",
+    password: "testpassword"
+}
+```
+
+---
+
+### Get Users
+
+Method used: **[GET]** `/api/users/`
+
+On Success: Returns an array of users.
+
+
+Parameters:
+
+|      Name     |   Type   | Required |              Notes                |
+|---------------|----------|----------|-----------------------------------|
+| Authorization |**Header**|   yes    | Acquired from a successful login. |
+
+---
+
+### Get Specific User
+
+Method used: **[GET]** `/api/users/:id/`
+
+On Success: Returns an array of users matching the current params.
+
+
+Parameters:
+
+|      Name     |   Type   | Required |              Notes                |
+|---------------|----------|----------|-----------------------------------|
+| Authorization |**Header**|   yes    | Acquired from a successful login. |
+
+---
+
+---
+
+### Get List of all Tabs
+
+Method used: **[GET]** `/api/tabs/`
+
+On Success: Returns an array of all tabs in database.
+
+
+Parameters:
+
+|      Name     |   Type   | Required |              Notes                |
+|---------------|----------|----------|-----------------------------------|
+| Authorization |**Header**|   yes    | Acquired from a successful login. |
+
+---
+
+---
+
+### Get List of all Tabs saved by a specific user.
+
+Method used: **[GET]** `/api/tabs/:user_id/`
+
+On Success: Returns an array of all tabs in database saved by a specific user.
+
+
+Parameters:
+
+|      Name     |   Type   | Required |              Notes                |
+|---------------|----------|----------|-----------------------------------|
+| Authorization |**Header**|   yes    | Acquired from a successful login. |
+
+---
+
+### Post Tab
+
+Method used: **[POST]** `/api/tabs/`
+
+On Success: Adds a new tab to the database.
+
+
+Parameters:
+
+|        Name      |   Type   | Required |                   Notes                     |
+|---------------   |----------|----------|---------------------------------------------|
+|   Authorization  |**Header**|    yes   | Acquired from a successful login.           |
+|       title      |  string  |    yes   |The name of the website being saved.         |
+|      website     |  string  |    yes   |The address of the website being saved.      |
+|      category    |  string  |    no    |The category the website will be saved under.|
+|      favicon     |  string  |    no    |The image url of a favicon from the website. |
+|      date        |  integer |    no    |The date the website was saved to tabless.   |
+|short_description |  string  |    no    |A short description of the website.          |
+| long_description |  string  |    no    |A long description of the website.           |
+
+---
+
+### Update Tabs
+
+Method used: **[PUT]** `api/tabs/:id/`
+
+On Success: Returns updated array.
+
+
+Parameters:
+
+|        Name      |   Type   | Required |                   Notes                     |
+|---------------   |----------|----------|---------------------------------------------|
+|   Authorization  |**Header**|    yes   | Acquired from a successful login.           |
+|       title      |  string  |    yes   |The name of the website being saved.         |
+|      website     |  string  |    yes   |The address of the website being saved.      |
+|      category    |  string  |    no    |The category the website will be saved under.|
+|      favicon     |  string  |    no    |The image url of a favicon from the website. |
+|      date        |  integer |    no    |The date the website was saved to tabless.   |
+|short_description |  string  |    no    |A short description of the website.          |
+| long_description |  string  |    no    |A long description of the website.           |
+
+---
+
+### Delete Tab
+
+Method used: **[DELETE]** `//api/tabs/:id`
+
+On Success: Deletes tab for database.
+
+
+Parameters:
+
+|      Name     |   Type   | Required |                   Notes                     |
+|---------------|----------|----------|---------------------------------------------|
+| Authorization |**Header**|    yes   | Acquired from a successful login.           |
+
+---
