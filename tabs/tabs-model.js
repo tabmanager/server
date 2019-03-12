@@ -2,18 +2,38 @@ const db = require('../database/dbConfig.js');
 
 module.exports = {
   addTab,
+  add,
+  remove,
+  update,
   getTabs,
   findTabsBy,
   findByUserId,
-  // delete,
 };
 
 function getTabs() {
   return db('tabs');
 }
 
+async function add(tab) {
+  const [id] = await db('tabs').insert(tab);
+
+  return findByUserId(id);
+}
+
 function findTabsBy(filter) {
   return db('tabs').where(filter);
+}
+
+function update(id, changes) {
+  return db('tabs')
+    .where({ id })
+    .update(changes, '*');
+}
+
+function remove(id) {
+  return db('tabs')
+    .where({ id })
+    .del();
 }
 
 async function addTab(tab) {
@@ -24,17 +44,7 @@ async function addTab(tab) {
 
 function findByUserId(user_id) {
   return db('tabs')
-    .where({id: user_id})
-    .first();
+    .where({ user_id })
 }
-
-// function delete = user_id => {
-//   return db('users')
-//       .where({ id: user_id })
-//       .first()
-//       .del();
-// }
-
-// getTabByUser
 
 
