@@ -1,34 +1,32 @@
-
 exports.up = function(knex, Promise) {
-    return knex.schema.createTable("tabs", tbl => {
-      tbl.increments();
-  
-      tbl.string('title', 255).notNullable();
-  
-      tbl.string('website', 255).notNullable();
+  return knex.schema.createTable('tabs', tbl => {
+    tbl.increments()
 
-      tbl.string('category', 255)
-  
-      tbl.string('favicon');
+    tbl.string('title').notNullable()
 
-      tbl.integer('date', 20);
-  
-      tbl.string('short_description', 255);
-  
-      tbl.string('full_description');
+    tbl.string('website').notNullable()
 
-      tbl.timestamps(true, true);
+    tbl.string('category')
 
-      tbl
+    tbl.string('favicon')
+
+    tbl.integer('date')
+
+    tbl.text('short_description')
+
+    tbl.text('full_description')
+
+    tbl.timestamps(true, true)
+
+    tbl
       .integer('user_id')
       .references('id')
       .inTable('users')
       .onDelete('CASCADE')
       .onUpdate('CASCADE')
-    });
-    
-  };
-  
-  exports.down = function(knex, Promise) {
-    return knex.schema.dropTableIfExists("tabs");
-  };
+  })
+}
+
+exports.down = function(knex, Promise) {
+  return knex.schema.dropTableIfExists('tabs')
+}
