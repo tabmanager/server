@@ -69,7 +69,7 @@ server.post('/api/login', (req, res) => {
           token,
           secret,
           roles: token.roles,
-          user_id: user.id 
+          user_id: user.id
         })
       } else {
         res.status(401).json({ message: 'Invalid Credentials' })
@@ -193,12 +193,13 @@ server.get('/api/tabs/:user_id', async (req, res) => {
 
 server.post('/api/tabs', async (req, res) => {
   try {
-    const tab = await Tabs.add(req.body)
-    res.status(201).json(tab)
+    const newId = await Tabs.add(req.body)
+    const newTab = await Tabs.findTabsBy({ id: newId[0] })
+    res.status(201).json(newTab[0])
   } catch (error) {
     console.log(error)
     res.status(500).json({
-      message: 'Error adding the hub'
+      message: 'Error adding the tab'
     })
   }
 })

@@ -16,10 +16,10 @@ function getTabs() {
 
 async function add(tab) {
   const id = await db('tabs')
-    .returning('user_id')
+    .returning('id')
     .insert(tab)
 
-  return findByUserId(id)
+  return id
 }
 
 function findTabsBy(filter) {
@@ -37,14 +37,6 @@ function remove(id) {
   return db('tabs')
     .where({ id })
     .del()
-}
-
-async function addTab(tab) {
-  const id = await db('tabs')
-    .returning('user_id')
-    .insert(tab)
-
-  return findByUserId(id)
 }
 
 function findByUserId(user_id) {
