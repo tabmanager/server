@@ -19,10 +19,12 @@ server.use(helmet())
 server.use(express.json())
 server.use(cors())
 
+// GET 
 server.get('/', (req, res) => {
   res.send("It's alive!")
 })
 
+// REGISTER
 server.post('/api/register', (req, res) => {
   let user = req.body
 
@@ -53,6 +55,7 @@ function generateToken(user) {
   return jwt.sign(payload, secret, options)
 }
 
+// LOGIN
 server.post('/api/login', (req, res) => {
   let { username, password } = req.body
 
@@ -105,6 +108,7 @@ function checkRole(role) {
   }
 }
 
+// GET USERS
 server.get('/api/users', restricted, checkRole('User'), (req, res) => {
   Users.find()
     .then(users => {
@@ -124,9 +128,7 @@ server.get('/users', restricted, async (req, res) => {
 })
 
 // GET list of tabs
-
 server.get('/api/tabs', (req, res) => {
-  // db('tabs')
   Tabs.getTabs()
     .then(tabs => {
       const tabCollection = tabs.map(tab => {
@@ -188,7 +190,6 @@ server.get('/api/tabs/:user_id', async (req, res) => {
 })
 
 // POST a new tab
-
 server.post('/api/tabs', async (req, res) => {
   try {
     const tab = await Tabs.add(req.body)
