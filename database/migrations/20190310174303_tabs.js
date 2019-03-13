@@ -12,9 +12,9 @@ exports.up = function(knex, Promise) {
 
     tbl.integer('date')
 
-    tbl.string('short_description')
+    tbl.text('short_description')
 
-    tbl.string('full_description')
+    tbl.text('full_description')
 
     tbl.timestamps(true, true)
 
