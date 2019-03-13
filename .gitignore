@@ -5,7 +5,8 @@
 /tabless
 
 # sqlite db
-/database/auth.db
+/database/auth.db3
+/database/dbConfig.js
 
 # testing
 /coverage

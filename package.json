@@ -28,7 +28,7 @@
     "test": "jest",
     "start": "node index.js",
     "server": "nodemon",
-    "test": "jest --watch --verbose"
+    "test": "jest --watch --verbose --runInBand"
   },
   "jest": {
     "testEnvironment": "node"

@@ -19,7 +19,7 @@ server.use(helmet())
 server.use(express.json())
 server.use(cors())
 
-// GET 
+// GET
 server.get('/', (req, res) => {
   res.send("It's alive!")
 })
@@ -238,4 +238,9 @@ server.delete('/api/tabs/:id', async (req, res) => {
 })
 
 const port = process.env.PORT || 4000
-server.listen(port, () => console.log(`\n** Running on port ${port} **\n`))
+
+if (!module.parent) {
+  server.listen(port, () => console.log(`\n** Running on port ${port} **\n`))
+}
+
+module.exports = server
