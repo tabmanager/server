@@ -1,7 +1,6 @@
 const db = require('../database/dbConfig.js')
 
 module.exports = {
-  addTab,
   add,
   remove,
   update,
