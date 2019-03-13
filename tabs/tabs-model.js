@@ -1,4 +1,4 @@
-const db = require('../database/dbConfig.js');
+const db = require('../database/dbConfig.js')
 
 module.exports = {
   addTab,
@@ -7,44 +7,46 @@ module.exports = {
   update,
   getTabs,
   findTabsBy,
-  findByUserId,
-};
+  findByUserId
+}
 
 function getTabs() {
-  return db('tabs');
+  return db('tabs')
 }
 
 async function add(tab) {
-  const [id] = await db('tabs').insert(tab);
+  const id = await db('tabs')
+    .returning('user_id')
+    .insert(tab)
 
-  return findByUserId(id);
+  return findByUserId(id)
 }
 
 function findTabsBy(filter) {
-  return db('tabs').where(filter);
+  return db('tabs').where(filter)
 }
 
 function update(id, changes) {
   return db('tabs')
     .where({ id })
-    .update(changes, '*');
+    .returning('*')
+    .update(changes, '*')
 }
 
 function remove(id) {
   return db('tabs')
     .where({ id })
-    .del();
+    .del()
 }
 
 async function addTab(tab) {
-  const [id] = await db('tabs').insert(tab);
+  const id = await db('tabs')
+    .returning('user_id')
+    .insert(tab)
 
-  return findByUserId(id);
+  return findByUserId(id)
 }
 
 function findByUserId(user_id) {
-  return db('tabs')
-    .where({ user_id })
+  return db('tabs').where({ user_id })
 }
-
-
