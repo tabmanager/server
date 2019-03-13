@@ -4,6 +4,9 @@
 /node_modules
 /tabless
 
+# sqlite db
+/database/auth.db
+
 # testing
 /coverage
 /uploads
