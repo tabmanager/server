@@ -783,7 +783,7 @@ exports.seed = function(knex, Promise) {
             short_description: "Send money to friends and family.",
             full_description: "PayPal Holdings, Inc. is an American company operating a worldwide online payments system that supports online money transfers and serves as an electronic alternative to traditional paper methods like checks and money orders.",
           },
-        
+      
       ]);
     });
 };
