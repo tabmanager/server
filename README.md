@@ -195,7 +195,7 @@ Parameters:
 
 Method used: **[DELETE]** `//api/tabs/:id`
 
-On Success: Deletes tab for database.
+On Success: Deletes tab from database.
 
 
 Parameters:

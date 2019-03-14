@@ -1,6 +1,7 @@
 const request = require('supertest')
 const server = require('./index')
 
+// GET
 describe('tests', () => {
   it('should return something', async () => {
     const response = await request(server).get('/')
@@ -8,48 +9,57 @@ describe('tests', () => {
   })
 })
 
-// describe('index.js tests', () => {
-//     describe('POST /api/register endpoint', () => {
-//         beforeEach(() => {
-//             jest.setTimeout(10000);
-//           });
+describe('index.js tests', () => {
+  it("should return an list of tabs", async () => {
+    const response = await request(server).get(`/api/tabs/`);
+    expect(response.status).toBe(200);
+  });
 
-//         it('Should return an error if there is no username', async () => {
-//             const noUsername = {password: 'test'};
+  it('Should return JSON', async () => {
+    const response = await request(server).get('/api/tabs/');
+    expect(response.type).toBe('application/json');
+});
 
-//             let response = await request(server).post('/api/register/').send(noUsername);
+  it("Should return an array of tabs even if array is empty", async () => {
+    const response = await request(server).get("/api/tabs/");
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-//             expect(response.body).toEqual({
-//                 error: `Make sure to include a username and your name!`
-//             })
-//         });
+  it("should return an array of tabs for a specific user_id", async () => {
+    let response = await request(server).get(`/api/tabs/:user_id`);
+    expect(response.status).toBe(200);
+  });
 
-//         it('Should return an error if there is no password', async () => {
-//             const noPassword = {username: 'test'};
+});
 
-//             let response = await request(server).post('/api/register/').send(noPassword);
+// POST
+describe("POST index.js tests", () => {
+  it("Should return status 201 when successful", async () => {
 
-//             expect(response.body).toEqual({
-//                 error: `Please include a password.`
-//             })
-//         });
-//     });
+      const newTab = 
+      { 
+          title: "Test", 
+          website: "www.test.com" 
+      };
 
-//     describe('POST /api/login endpoint', () => {
-//         it('Should return an error if username was not supplied', async () => {
-//             const noUsername = { password: 'test'};
+  const response = await request(server)
+    .post("/api/tabs")
+    .send(newTab)
+  expect(response.status).toBe(201);
+  });
 
-//             let response = await request(server).post('/api/login').send(noUsername);
+  it('should return status 201 if there is a username and password', async () => {
+      const passUsername = { password: 'pass', username: 'Lambda' };
+  
+      let response = await request(server).post('/api/register/').send(passUsername);
+      expect(response.status).toBe(201);
+  });
 
-//             expect(response.body).toEqual({ error: `Please include a username!` });
-//         });
+  it('should return status 200 if there is a username and password', async () => {
+    const passUsername = { password: 'pass', username: 'Lambda' };
 
-//         it('should return an error if no password was supplied', async () => {
-//             const noPassword = { username: 'test'};
+    let response = await request(server).post('/api/login/').send(passUsername);
+    expect(response.status).toBe(200);
+});
 
-//             let response = await request(server).post('/api/login').send(noPassword);
-
-//             expect(response.body).toEqual({ error: `Please include a password!` });
-//         });
-//     })
-// });
+});
