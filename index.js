@@ -5,6 +5,8 @@ const helmet = require('helmet')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const favorite = require('favorite')
+const scrape = require('metatag-crawler')
 
 const db = require('./database/dbConfig.js')
 const Users = require('./users/users-model.js')
@@ -192,9 +194,19 @@ server.get('/api/tabs/:user_id', async (req, res) => {
 // POST a new tab
 server.post('/api/tabs', async (req, res) => {
   try {
-    const newId = await Tabs.add(req.body)
-    const newTab = await Tabs.findTabsBy({ id: newId[0] })
-    res.status(201).json(newTab[0])
+    scrape(req.body.website, { resolveUrls: false }, function(err, data) {
+      favorite.get(req.body.website, async function(err, favicon) {
+        let addTab = Object.assign(req.body, {
+          favicon: favicon,
+          title: data.meta.title,
+          short_description: data.meta.description
+        })
+
+        const newId = await Tabs.add(req.body)
+        const newTab = await Tabs.findTabsBy({ id: newId[0] })
+        res.status(201).json(newTab[0])
+      })
+    })
   } catch (error) {
     console.log(error)
     res.status(500).json({

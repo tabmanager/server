@@ -10,11 +10,7 @@ exports.up = function(knex, Promise) {
 
     tbl.string('favicon')
 
-    tbl.integer('date')
-
     tbl.text('short_description')
-
-    tbl.text('full_description')
 
     tbl.timestamps(true, true)
 
